@@ -65,6 +65,7 @@ def newAnalyzer():
                                             comparefunction=CompareCompanies)
 
         analyzer['Num_Total_Cabs'] = 0
+        analyzer['Num_Total_Services'] = 0
 
         return analyzer
     except Exception as exp:
@@ -107,7 +108,7 @@ def addNumTripsToTotal(catalog,numFileTrips):
     """
     Calcula el total de viajes en Taxi realizados.
     """
-    citibike['Num_Of_Total_Trips'] = citibike['Num_Of_Total_Trips'] + numFileTrips
+    catalog['Num_Total_Services'] = catalog['Num_Total_Services'] + numFileTrips
 
 
 
@@ -124,7 +125,7 @@ def NewCompanyEntry():
 # Funciones de consulta requisitos
 # ==============================
 
-def CompaniesInfo(analyzer,criteria1,criteria2):
+def CompaniesInfo(catalog,criteria1,criteria2):
     """
     Proyecto Final | Req 1
     Retorna:
@@ -134,7 +135,7 @@ def CompaniesInfo(analyzer,criteria1,criteria2):
         TOP Y compañías con más servicios prestados.
     """
 
-    companies_lt = m.keySet(analyzer['Companies_Map'])
+    companies_lt = m.keySet(catalog['Companies_Map'])
     num_companies = lt.size(companies_lt)
 
     moreCabs = lt.newList(datastructure='ARRAY_LIST',cmpfunction=None)
@@ -143,16 +144,16 @@ def CompaniesInfo(analyzer,criteria1,criteria2):
     iterator = it.newIterator(companies_lt)
     while it.hasNext(iterator):
         company_name  = it.next(iterator)
-        company = m.get(citibike['Companies_Map'],company_name)
+        company = m.get(catalog['Companies_Map'],company_name)
 
         lt.addLast(moreCabs,company)
         lt.addLast(moreServices,company)
 
-    mg.mergesort(arrival_lt_sorted,greaterNumCabs)
-    mg.mergesort(departure_lt_sorted,greaterNumServices)
+    mg.mergesort(moreCabs,greaterNumCabs)
+    mg.mergesort(moreServices,greaterNumServices)
 
     TOPNumCabs = lt.subList(moreCabs,1,criteria1)
-    TOPNumServices = lt.subList(moreServices(criteria2))
+    TOPNumServices = lt.subList(moreServices,1,criteria2)
 
     return catalog['Num_Total_Cabs'] , num_companies , TOPNumCabs , TOPNumServices
 
@@ -193,7 +194,7 @@ def compareTaxisIDS(Id1,Id2):
     Función de comparación utilizada en:
         Mapa de Compañias.
     """
-    
+    Id2 = Id2['key']
     if (Id1 == Id2):
         return 0
     elif (Id1 > Id2):
@@ -206,12 +207,10 @@ def CompareCompanies(comp1,comp2):
     Función de comparación utilizada en:
         Mapa de Compañias.
     """
-    value1 = comp1['key']
-    value2 = comp2['key']
-    
-    if (value1 == value2):
+    comp2 = comp2['key']
+    if (comp1 == comp2):
         return 0
-    elif (value1 > value2):
+    elif (comp1 > comp2):
         return 1
     else:
         return -1

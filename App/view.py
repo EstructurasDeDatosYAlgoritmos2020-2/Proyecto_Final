@@ -28,7 +28,8 @@
 import sys
 import config
 from App import controller
-from DISClib.ADT import stack
+from DISClib.DataStructures import listiterator as it
+
 import timeit
 assert config   
 
@@ -43,7 +44,7 @@ operación seleccionada.
 #  Variables
 # ___________________________________________________
 
-service_file = "Taxi_Trips-2020-subset-"
+service_file = "taxi-trips-wrvz-psew-subset-"
 recursionLimit = 20000
 
 # ___________________________________________________
@@ -62,14 +63,22 @@ def printOptionThree(info,criteria1,criteria2):
     Imprime la infomación sobre las compañías.
     """
     NumCabs, NumCompanies, TOPNumCabs, TOPNumServices = info
+    
+    print("\nNúmero total de compañías con al menos un taxi inscrito: " + str(NumCompanies) + ".")
+    iterator = it.newIterator(TOPNumCabs)
+    print("\nTOP "+str(criteria1) + " de compañías con más taxis afiliados.")
+    while it.hasNext(iterator):
+        company = it.next(iterator)
+        print('Compañía: ' + str(company['key']) + '    Número de taxis afiliados: '+ str(company['value']['NumCabs']) + "." )
+
+
     print("\nNúmero total de taxis en los servicios reportados: "+ str(NumCabs) +".")
-    print("Número total de compañías con al menos un taxi inscrito: " + str(NumCompanies) + ".")
-
-    print("\n TOP "+str(criteria1) + "de compañías con más taxis afiliados.")
-    print(TOPNumCabs)
-
-    print("\n TOP "+str(criteria1) + "de compañías con más servicios prestados.")
-    print(TOPNumCabs)
+    iterator2 = it.newIterator(TOPNumServices)
+    print("\nTOP "+str(criteria2) + " de compañías con más servicios prestados.")
+    while it.hasNext(iterator2):
+        company = it.next(iterator2)
+        print('Compañía: ' + str(company['key']) + '    Número de servicios prestados: '+ str(company['value']['NumServices']) + "." )
+    
 
 
 # ___________________________________________________
@@ -102,16 +111,16 @@ while True:
         catalog = controller.init()
 
     elif int(inputs[0]) == 2:
-        print("\nCargar información sistema de Taxis Chicago ...")
+        
         size = input("Elija el tamaño del archivo CSV que quiere cargar (small,medium,large): ")
-
+        print("\nCargando información sistema de Taxis Chicago ...")
         controller.loadTrips(catalog,service_file,size)
         printOptionTwo(catalog)
        
     elif int(inputs[0]) == 3:
         print("\nRequerimiento No. 1 del Proyecto Final: ")
-        criteria1 = int(input('\n Ingrese el número de compañías que quiere ver en el TOP más taxis inscritos. '))
-        criteria2 = int(input('\n Ingrese el número de compañías que quiere ver en el TOP más servicios prestados. '))
+        criteria1 = int(input('\nIngrese el número de compañías que quiere ver en el TOP más taxis inscritos: '))
+        criteria2 = int(input('\nIngrese el número de compañías que quiere ver en el TOP más servicios prestados: '))
         info = controller.CompaniesInfo(catalog,criteria1,criteria2)
         printOptionThree(info,criteria1,criteria2)
 

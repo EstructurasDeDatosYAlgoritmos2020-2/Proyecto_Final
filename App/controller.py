@@ -62,7 +62,9 @@ def loadTrips(catalog,taxis_file,size):
     """
 
     tripsfile = taxis_file + size + '.csv'
+    
     tripfile = cf.data_dir + tripsfile
+
     input_file = csv.DictReader(open(tripfile,encoding ="utf-8"),delimiter=",")
 
     num_trips = 0
