@@ -124,6 +124,10 @@ while True:
         info = controller.CompaniesInfo(catalog,criteria1,criteria2)
         printOptionThree(info,criteria1,criteria2)
 
+    elif int(inputs[0] ==4):
+        print("\nRequerimiento No. 2 del Proyecto Final: ")
+
+
     else:
         sys.exit(0)
 sys.exit(0)

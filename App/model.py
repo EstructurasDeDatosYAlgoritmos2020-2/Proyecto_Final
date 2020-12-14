@@ -84,8 +84,11 @@ def AddCabTrip(catalog,trip):
 def addCompany(catalog,trip):
     """
     """
-
     company = trip['company']
+    if company is None:
+        company = 'Independent Owner'
+
+
     entry = m.get(catalog['Companies_Map'],company)
 
     if entry is None:
@@ -110,8 +113,6 @@ def addNumTripsToTotal(catalog,numFileTrips):
     """
     catalog['Num_Total_Services'] = catalog['Num_Total_Services'] + numFileTrips
 
-
-
 def NewCompanyEntry():
     """
     """
@@ -134,7 +135,6 @@ def CompaniesInfo(catalog,criteria1,criteria2):
         TOP X compañías con más taxis afiliados.
         TOP Y compañías con más servicios prestados.
     """
-
     companies_lt = m.keySet(catalog['Companies_Map'])
     num_companies = lt.size(companies_lt)
 
@@ -156,8 +156,6 @@ def CompaniesInfo(catalog,criteria1,criteria2):
     TOPNumServices = lt.subList(moreServices,1,criteria2)
 
     return catalog['Num_Total_Cabs'] , num_companies , TOPNumCabs , TOPNumServices
-
-
 
 
 # ==============================
